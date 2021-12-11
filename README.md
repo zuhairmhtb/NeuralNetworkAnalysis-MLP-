@@ -886,6 +886,16 @@ plt.grid()
 plt.show()
 ```
 
+    Activation: RELU: 100%|████████████████████████████████████████████████████████████████| 50/50 [20:40<00:00, 24.82s/it]
+    Activation: Sigmoid: 100%|█████████████████████████████████████████████████████████████| 50/50 [20:20<00:00, 24.40s/it]
+    Activation: Softmax: 100%|█████████████████████████████████████████████████████████████| 50/50 [20:56<00:00, 25.13s/it]
+    Activation: Tanh: 100%|████████████████████████████████████████████████████████████████| 50/50 [20:29<00:00, 24.58s/it]
+    
+
+
+![png](output_38_1.png)
+
+
 ## 7. Comparison of Optimization Algorithm
 
 1. Number of layers: 6 (Optimum accuracy layer for both dataset found above)
