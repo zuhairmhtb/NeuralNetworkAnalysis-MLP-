@@ -42,6 +42,26 @@ import warnings
 warnings.filterwarnings('ignore')
 ```
 
+
+```python
+is_cuda_available = tf.test.is_gpu_available(cuda_only=True)
+print(f'Cuda Available: {is_cuda_available}')
+```
+
+    WARNING:tensorflow:From <ipython-input-3-47c68bb476e6>:1: is_gpu_available (from tensorflow.python.framework.test_util) is deprecated and will be removed in a future version.
+    Instructions for updating:
+    Use `tf.config.list_physical_devices('GPU')` instead.
+    Cuda Available: True
+    
+
+
+```python
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+```
+
+    Num GPUs Available:  1
+    
+
 ## 1. Model
 
 
@@ -78,7 +98,7 @@ def get_model(no_layers, neurons_per_layer, activation_function, output_function
 
 ```python
 hidden_layers = [i for i in range(1, 15, 1)]
-neurons_per_layer = [i for i in range(100, 1000, 10)]
+neurons_per_layer = [i for i in range(100, 500, 50)]
 activation_functions = {
     'RELU': 'relu', 
     'Sigmoid': 'sigmoid', 
@@ -122,7 +142,7 @@ plt.show()
     
 
 
-![png](output_10_1.png)
+![png](output_12_1.png)
 
 
 ### CIFAR 100
@@ -150,7 +170,7 @@ plt.show()
     
 
 
-![png](output_13_1.png)
+![png](output_15_1.png)
 
 
 ## 3. Train Model
@@ -301,10 +321,224 @@ plt.show()
     
 
 
-![png](output_19_1.png)
+![png](output_21_1.png)
 
+
+#### CIFAR-100
 
 
 ```python
+x_train, y_train, x_test, y_test = get_cifar100_dataset()
+x_train = np.reshape(x_train, (x_train.shape[0], -1))
+x_test = np.reshape(x_test, (x_test.shape[0], -1))
 
+x_train, y_train = shuffle(x_train, y_train)
+x_test, y_test = shuffle(x_test, y_test)
+```
+
+
+```python
+tf.debugging.set_log_device_placement(False)
+colors = [
+    '#eb4034',
+    '#eb7a34',
+    '#eba534',
+    '#ebdf34',
+    '#c0eb34',
+    '#34eb6b',
+    '#34ebb1',
+    '#34c3eb',
+    '#9634eb',
+    '#d934eb',
+    '#eb34a2',
+    '#eb3462',
+    '#7a0909',
+    '#5c5c06',
+    '#06425c',
+    '#000000'
+]
+plt.figure(1, figsize=(20, 30))
+time_to_train = []
+time_to_train_x = []
+for i in hidden_layers:
+    time_to_train_x.append(f'Layers: {i}')
+
+for i in hidden_layers:
+    model = get_model(
+        no_layers=i,
+        neurons_per_layer=100,
+        activation_function=activation_functions['RELU'],
+        output_function='softmax',
+        optimisation_algorithm=optimization_algs['Adam'],
+        loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(),
+        total_inputs=x_train.shape[1],
+        total_classes=np.unique(y_train).size,
+        metrics=[
+            tf.keras.metrics.SparseCategoricalAccuracy()
+        ]
+    )
+    start = time.time()
+    a, l, ta = train_model(model, x_train, x_test, y_train, y_test, desc=f'Layers: {i}', show_every=2, batch_size=32, epochs=50)
+    end = time.time()
+    time_to_train.append(end-start)
+    plt.subplot(4, 1, 1)
+    plt.plot(a, color=colors[i-1], label=str(i))
+
+    plt.subplot(4, 1, 2)
+    plt.plot(l,color=colors[i-1], label=str(i))
+
+
+    plt.subplot(4, 1, 3)
+    plt.plot(ta,color=colors[i-1], label=str(i))
+
+plt.subplot(4, 1, 1)
+plt.title('Accuracies')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 2)
+plt.title('Losses')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 3)
+plt.title('Training Accuracy')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 4)
+plt.title('Time to Train')
+plt.bar(time_to_train_x, time_to_train, width=0.4)
+plt.xlabel('Number of layers')
+plt.ylabel('Seconds')
+plt.grid()
+
+plt.show()
+```
+
+    Layers: 1: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [14:11<00:00, 17.03s/it]
+    Layers: 2: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [14:45<00:00, 17.72s/it]
+    Layers: 3: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [15:04<00:00, 18.09s/it]
+    Layers: 4: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [15:59<00:00, 19.20s/it]
+    Layers: 5: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [17:02<00:00, 20.46s/it]
+    Layers: 6: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [17:03<00:00, 20.47s/it]
+    Layers: 7: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [17:50<00:00, 21.40s/it]
+    Layers: 8: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [17:57<00:00, 21.55s/it]
+    Layers: 9: 100%|███████████████████████████████████████████████████████████████████████| 50/50 [19:11<00:00, 23.03s/it]
+    Layers: 10: 100%|██████████████████████████████████████████████████████████████████████| 50/50 [20:10<00:00, 24.21s/it]
+    Layers: 11: 100%|██████████████████████████████████████████████████████████████████████| 50/50 [20:24<00:00, 24.50s/it]
+    Layers: 12: 100%|██████████████████████████████████████████████████████████████████████| 50/50 [20:17<00:00, 24.35s/it]
+    Layers: 13: 100%|██████████████████████████████████████████████████████████████████████| 50/50 [21:07<00:00, 25.36s/it]
+    Layers: 14: 100%|██████████████████████████████████████████████████████████████████████| 50/50 [23:02<00:00, 27.64s/it]
+    
+
+
+![png](output_24_1.png)
+
+
+## 5. Comparison of Different Number of Neurons
+
+1. Number of layers: 6 (Optimum accuracy layer for both dataset found above)
+
+2. Activation Fuction: Relu
+
+3. Output activation: Softmax
+
+4. Optimization: Adam
+
+5. Loss: Binary CrossEntropy
+
+6. Batch Size: 32
+
+7. Epochs: 50
+
+#### MNIST
+
+
+```python
+x_train, y_train, x_test, y_test = get_mnist_dataset()
+x_train = np.reshape(x_train, (x_train.shape[0], -1))
+x_test = np.reshape(x_test, (x_test.shape[0], -1))
+
+x_train, y_train = shuffle(x_train, y_train)
+x_test, y_test = shuffle(x_test, y_test)
+```
+
+
+```python
+colors = [
+    '#eb4034',
+    '#eb7a34',
+    '#eba534',
+    '#ebdf34',
+    '#c0eb34',
+    '#34eb6b',
+    '#34ebb1',
+    '#34c3eb',
+    '#9634eb',
+    '#d934eb',
+    '#eb34a2',
+    '#eb3462',
+    '#7a0909',
+    '#5c5c06',
+    '#06425c',
+    '#000000'
+]
+plt.figure(1, figsize=(20, 30))
+time_to_train = []
+time_to_train_x = []
+for i in hidden_layers:
+    time_to_train_x.append(f'Layers: {i}')
+
+for i in neurons_per_layer[::-1]:
+    model = get_model(
+        no_layers=6,
+        neurons_per_layer=i,
+        activation_function=activation_functions['RELU'],
+        output_function='softmax',
+        optimisation_algorithm=optimization_algs['Adam'],
+        loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(),
+        total_inputs=x_train.shape[1],
+        total_classes=np.unique(y_train).size,
+        metrics=[
+            tf.keras.metrics.SparseCategoricalAccuracy()
+        ]
+    )
+    start = time.time()
+    a, l, ta = train_model(model, x_train, x_test, y_train, y_test, desc=f'Neurons: {i}', show_every=2, batch_size=32, epochs=50)
+    end = time.time()
+    time_to_train.append(end-start)
+    plt.subplot(4, 1, 1)
+    plt.plot(a, color=colors[i-1], label=str(i))
+
+    plt.subplot(4, 1, 2)
+    plt.plot(l,color=colors[i-1], label=str(i))
+
+
+    plt.subplot(4, 1, 3)
+    plt.plot(ta,color=colors[i-1], label=str(i))
+
+plt.subplot(4, 1, 1)
+plt.title('Accuracies')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 2)
+plt.title('Losses')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 3)
+plt.title('Training Accuracy')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 4)
+plt.title('Time to Train')
+plt.bar(time_to_train_x, time_to_train, width=0.4)
+plt.xlabel('Number of layers')
+plt.ylabel('Seconds')
+plt.grid()
+
+plt.show()
 ```
