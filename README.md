@@ -674,7 +674,7 @@ plt.show()
 
 1. Number of layers: 6 (Optimum accuracy layer for both dataset found above)
 
-2. Number of Neurons: ?? (Optimum number of neurons for both dataset found above)
+2. Number of Neurons: 250 (Optimum number of neurons for both dataset found above)
 
 3. Output activation: Softmax
 
@@ -729,7 +729,7 @@ count = 0
 for i in activations:
     model = get_model(
         no_layers=6,
-        neurons_per_layer=100, # Edit this
+        neurons_per_layer=250,
         activation_function=activation_functions[i],
         output_function='softmax',
         optimisation_algorithm=optimization_algs['Adam'],
@@ -781,6 +781,16 @@ plt.grid()
 plt.show()
 ```
 
+    Activation: RELU: 100%|████████████████████████████████████████████████████████████████| 50/50 [17:11<00:00, 20.63s/it]
+    Activation: Sigmoid: 100%|█████████████████████████████████████████████████████████████| 50/50 [17:06<00:00, 20.53s/it]
+    Activation: Softmax: 100%|█████████████████████████████████████████████████████████████| 50/50 [18:52<00:00, 22.65s/it]
+    Activation: Tanh: 100%|████████████████████████████████████████████████████████████████| 50/50 [17:13<00:00, 20.67s/it]
+    
+
+
+![png](output_35_1.png)
+
+
 #### CIFAR 100
 
 
@@ -824,7 +834,7 @@ count=0
 for i in activations:
     model = get_model(
         no_layers=6,
-        neurons_per_layer=100, # Edit this
+        neurons_per_layer=250,
         activation_function=activation_functions[i],
         output_function='softmax',
         optimisation_algorithm=optimization_algs['Adam'],
@@ -880,7 +890,7 @@ plt.show()
 
 1. Number of layers: 6 (Optimum accuracy layer for both dataset found above)
 
-2. Number of Neurons: ?? (Optimum number of neurons for both dataset found above)
+2. Number of Neurons: 250 (Optimum number of neurons for both dataset found above)
 
 3. Output activation: Softmax
 
@@ -935,7 +945,7 @@ count = 0
 for i in opt_algs:
     model = get_model(
         no_layers=6,
-        neurons_per_layer=100, # Edit this
+        neurons_per_layer=250,
         activation_function='relu', # Edit this
         output_function='softmax',
         optimisation_algorithm=optimization_algs[i],
@@ -1030,7 +1040,7 @@ count = 0
 for i in opt_algs:
     model = get_model(
         no_layers=6,
-        neurons_per_layer=100, # Edit this
+        neurons_per_layer=250,
         activation_function='relu', # Edit this
         output_function='softmax',
         optimisation_algorithm=optimization_algs[i],
