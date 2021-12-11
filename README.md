@@ -12,8 +12,6 @@ This file contains the implementation of simple MLP containing dense layers. Obj
 
 5. Complexity of training dataset
 
-6. Loss Functions
-
 ## Dataset:
 
 The following datasets are used for comparison:
@@ -21,8 +19,6 @@ The following datasets are used for comparison:
 1. MNIST Handwritten digit dataset
 
 2. CIFAR 100 dataset
-
-3. (Text dataset)
 
 
 ```python
@@ -197,7 +193,7 @@ def train_model(model, x_train, x_test, y_train, y_test, verbose=False, desc='',
     return accuracies, losses, train_accuracies
 ```
 
-## 4. Comparison of Different Input Layers
+## 4. Comparison of Different number of Hidden Layers
 
 1. Neurons per layer: 100
 
@@ -1111,4 +1107,20 @@ plt.ylabel('Seconds')
 plt.grid()
 
 plt.show()
+```
+
+    Optimization: Adam: 100%|██████████████████████████████████████████████████████████████| 50/50 [20:41<00:00, 24.84s/it]
+    Optimization: Adagrad: 100%|███████████████████████████████████████████████████████████| 50/50 [19:02<00:00, 22.86s/it]
+    Optimization: Adadelta: 100%|██████████████████████████████████████████████████████████| 50/50 [20:27<00:00, 24.55s/it]
+    Optimization: RMSProp: 100%|███████████████████████████████████████████████████████████| 50/50 [23:47<00:00, 28.56s/it]
+    Optimization: SGD: 100%|███████████████████████████████████████████████████████████████| 50/50 [19:07<00:00, 22.95s/it]
+    
+
+
+![png](output_45_1.png)
+
+
+
+```python
+
 ```
