@@ -956,7 +956,7 @@ for i in opt_algs:
     model = get_model(
         no_layers=6,
         neurons_per_layer=250,
-        activation_function='relu', # Edit this
+        activation_function='relu',
         output_function='softmax',
         optimisation_algorithm=optimization_algs[i],
         loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(),
@@ -1007,6 +1007,17 @@ plt.grid()
 plt.show()
 ```
 
+    Optimization: Adam: 100%|██████████████████████████████████████████████████████████████| 50/50 [17:07<00:00, 20.55s/it]
+    Optimization: Adagrad: 100%|███████████████████████████████████████████████████████████| 50/50 [16:27<00:00, 19.75s/it]
+    Optimization: Adadelta: 100%|██████████████████████████████████████████████████████████| 50/50 [17:27<00:00, 20.94s/it]
+    Optimization: RMSProp: 100%|███████████████████████████████████████████████████████████| 50/50 [21:35<00:00, 25.91s/it]
+    Optimization: SGD: 100%|███████████████████████████████████████████████████████████████| 50/50 [15:48<00:00, 18.97s/it]
+    
+
+
+![png](output_42_1.png)
+
+
 #### CIFAR 100
 
 
@@ -1051,7 +1062,7 @@ for i in opt_algs:
     model = get_model(
         no_layers=6,
         neurons_per_layer=250,
-        activation_function='relu', # Edit this
+        activation_function='relu',
         output_function='softmax',
         optimisation_algorithm=optimization_algs[i],
         loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(),
